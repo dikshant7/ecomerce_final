@@ -1,0 +1,77 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Customer Registration{% endblock title %}
+{% block main-content %}
+<div class="container">
+ <div class="row my-3">
+  <div class="col-sm-6 offset-sm-3">
+   <h3>Customer Registration</h3>
+   {% for message in messages %}
+   <h5>{{message}}</h5>
+   {% endfor %}
+   <hr>
+
+   <form action="" method="post" novalidate class="shadow p-5">
+      {% csrf_token %}
+      <div class="mb-3">
+         <label for="firstname" class="form-label">First Name</label>
+         <input type="text" class="form-control" name="firstname">
+        </div>
+        <div class="mb-3">
+         <label for="lastname" class="form-label">Last Name</label>
+         <input type="text" class="form-control" name="lastname">
+        </div>
+    <div class="mb-3">
+     <label for="email" class="form-label">Email</label>
+     <input type="email" class="form-control" name="email">
+     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+    </div>
+    <div class="mb-3">
+     <label for="password" class="form-label">Password</label>
+     <input type="password" class="form-control" name="password">
+    </div>
+    <div class="mb-3">
+     <label for="password2" class="form-label">Confirm Password</label>
+     <input type="password" class="form-control" name="password2">
+    </div>
+    <div class="text-end">
+     <input type="submit" class="btn btn-danger">
+    </div>
+    <br>
+    <div class="text-center text-primary fw-bold"><small>Existing User ? <a href="{% url 'login' %}"
+       class="text-danger">Login Now</a> </small></div>
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="alert alert-danger my-3">{{error}}</p>
+    {% endfor %}
+    {% endif %}
+   </form>
+   <!-- <form method="POST" action="" class="shadow p-5" >
+      {% csrf_token %}
+      <div class="mb-3">
+      <p>first name:</p>
+      <input type="text" name="firstname"> 
+      </div>
+      <div class="mb-3">
+      <p>last name:</p>
+      <input type="text" name="lastname"> 
+      </div>
+      <div class="mb-3">
+      <p>email:</p>
+      <input type="text" name="email" id="">
+      </div>
+      <div class="mb-3">
+      <p>password:</p>
+      <input type="password" name="password" id="">
+      <div>
+      <div class="mb-3">
+      <p>repeat password:</p>
+      <input type="password" name="password2" id="">
+      </div>
+      <p></p>
+      <input type="submit">
+  </form> -->
+  </div>
+ </div>
+</div>
+{% endblock main-content %}

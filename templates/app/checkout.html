@@ -1,0 +1,55 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block main-content %}
+<div class="container">
+ <div class="row mt-5">
+  <div class="col-sm-6">
+    <h4>Order Summary</h4>
+    <hr>
+    {% for i in products %}
+    
+    <div class="row">
+     <div class="col-sm-3 text-center align-self-center"><img src="{{i.image.url}}" alt="" srcset="" class="img-fluid img-thumbnail shadow-sm" height="150" width="150"> </div>
+     <div class="col-sm-9">
+      <div>
+       <h5>{{i.product_name}}</h5>
+       <p class="mb-2 text-muted small">{{i.desc}}</p>
+       <div class="my-3">
+        <label for="quantity">Quantity:</label>
+          <span id="quantity">{{i.quant}}</span>
+       </div> 
+       <div class="d-flex justify-content-between">
+        <!-- <a href="/remove?query_name={{i.id|urlencode}}" class="btn btn-sm btn-secondary mr-3">Remove item </a> -->
+        <p class="mb-0"><span><strong>{{i.price}}</strong></span></p>
+       </div>
+      </div>
+     </div>
+    </div>
+    {% endfor %}
+    <h1>total : {{total}}</h1>
+    <small>Term and Condition: Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, ullam saepe! Iure optio repellat dolor velit, minus rem. Facilis cumque neque numquam laboriosam, accusantium adipisci nisi nihil in et quis?</small>
+  </div>
+  <div class="col-sm-4 offset-sm-1">
+    <h4>Select Shipping Address</h4>
+    <hr>
+    <form action="">
+      <div class="card">
+        <div class="card-body">
+        <h5>Sonam Kumari</h5>
+        <p>Hirapur Dhanbad Jharkahnd</p>
+        </div>
+      </div>
+        <div class="form-check mt-2 mb-5">
+          <input class="form-check-input" type="radio" value="">
+          <label class="form-check-label fw-bold" for="">
+            Address: 1 </label>
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock main-content %}
