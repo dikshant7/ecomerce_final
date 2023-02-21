@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-o$8396m$au%5=re#6c5h)h6d8+japo5uei&=xgq68h2&9)f3h2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["shoppinglyx.onrender.com","127.0.0.1","shoppinglyx-ecom.onrender.com"]
+ALLOWED_HOSTS = ['shoppinglyx-ecom.onrender.com','127.0.0.1']
 
 
 # Application definition
