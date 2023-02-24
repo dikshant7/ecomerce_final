@@ -17,6 +17,8 @@ def product_detail(request):
  return render(request, 'app/productdetail.html',{'i':i})
 
 def add_to_cart(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     product_id = request.GET.get('query_name')
     # i = product.objects.get(id=product_id) 
     current_user = request.user
