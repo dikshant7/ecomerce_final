@@ -13,13 +13,13 @@ class product(models.Model):
 
     def __str__(self):
         return self.product_name
-class user_detail(models.Model):
-    user_email=models.CharField(max_length=50)
-    user_address1=models.CharField(max_length=50)
-    user_address2=models.CharField(max_length=50)
-    user_city=models.CharField(max_length=50)
-    user_state=models.CharField(max_length=50)
-    user_zip=models.IntegerField()
-    order=models.JSONField(default=dict)
-    def __str__(self):
-        return self.user_email
+# class user_detail(models.Model):
+#     user_email=models.CharField(max_length=50)
+#     user_address1=models.CharField(max_length=50)
+#     user_address2=models.CharField(max_length=50)
+#     user_city=models.CharField(max_length=50)
+#     user_state=models.CharField(max_length=50)
+#     user_zip=models.IntegerField()
+#     order=models.JSONField(default=dict)
+#     def __str__(self):
+#         return self.user_email
