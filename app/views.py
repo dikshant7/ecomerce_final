@@ -358,7 +358,7 @@ def order_placed(request):
     return redirect('/orders')
 
 def order_placed_buy_now(request):
-    print('yes')
+    # print('yes')
     current_user = request.user
     user_email = current_user.email
     i = user_detail.objects.get(user_email=user_email)
