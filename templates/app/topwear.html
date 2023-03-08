@@ -1,16 +1,83 @@
 {% extends 'app/base.html' %}
 {% load static %}
-{% block title %}Product Detail{% endblock title %}
+{% block title %}Buy Now{% endblock title %}
 {% block main-content %}
-<div class="mx-3">
-    <h2>top wear</h2>
-    <!-- Slider 2 -->
-    <div class="owl-carousel" id="slider2">
+
+   <!-- {% for i in products %}
+    {% if i.category == "electronics" and i.sub_category == "mobile" %} -->
+    <!-- <div>
+    <a href="{% url 'product-detail' %}?query_name={{i.id|urlencode}}" class="btn">
+        <div class="item" ><img src='{{i.image.url}}' width="100px" height="100px" > </div>
+        <div class="fw-bold">{{i.product_name}} {{i.price}}</div>
+    </a>
+    </div> -->
+    
+    <!-- {% endif %}
+    {% endfor %} -->
      {% for i in products %}
-       {% if i.category == "fashion" and i.sub_category == "top_wear" %}
-       <a href="{% url 'product-detail' %}?query_name={{i.id|urlencode}}" class="btn"><div class="item"><img src='{{i.image.url}}' width="50px" height="100px" ><span class="fw-bold">{{i.product_name}}</span><br><span class="fs-5">{{i.price}}</span></div></a>
-       {% endif %}
-       {% endfor %}
-    </div>
-   </div>
+     {% if i.category == "fashion" and i.sub_category == "top_wear" %} 
+     
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+          <div class="row justify-content-center mb-3">
+            <div class="col-md-12 col-xl-10">
+              <div class="card shadow-0 border rounded-3">
+                <div class="card-body">
+                  <div class="row">
+                    <a href="/product-detail?query_name={{i.id|urlencode}}">
+                    <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                      <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                        <img src="{{i.image.url}}"
+                          class="w-100" />
+                
+                        <a href="#!">
+                          <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                </a>
+                    <div class="col-md-6 col-lg-6 col-xl-6">
+                      <h5>{{i.product_name}}</h5>
+                      <!-- <div class="d-flex flex-row">
+                        <div class="text-danger mb-1 me-2">
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                        </div>
+                        <span>310</span>
+                      </div> -->
+                      <div class="mt-1 mb-0 text-muted small">
+                        <div>{{i.feature1}}</div>
+                        <div>{{i.feature2}}</div>
+                        <div>{{i.feature3}}</div>
+                        <div>{{i.feature4}}</div>
+                      </div>
+                      <p class="text-truncate mb-4 mb-md-0">
+                        {{i.desc}}
+                      </p>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                      <div class="d-flex flex-row align-items-center mb-1">
+                        <h4 class="mb-1 me-1">{{i.price}}</h4>
+                        <span class="text-danger"><s>{{i.actual_price}}</s></span>
+                      </div>
+                      <!-- <h6 class="text-success">Free shipping</h6> -->
+                      <div class="d-flex flex-column mt-4">
+                        <a href="/cart?query_name={{i.id|urlencode}}" class="btn btn-primary btn-sm" type="button">Add to cart</a>
+                        <a href="/buy?query_name={{i.id|urlencode}}" class="btn btn-outline-primary btn-sm mt-2" type="button">
+                          Buy Now
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+      {% endif %}
+      {% endfor %}
 {% endblock main-content %}

@@ -5,15 +5,22 @@
 <div class="container my-5">
  <div class="row">
   <div class="col-sm-6 text-center align-self-center">
-   <img src="{{i.image.url}}" alt="" class="img-fluid img-thumbnail">
+   <img src="{{i.image.url}}" alt="" class="img-fluid img-thumbnail" width="200px" height="50px">
   </div>
   <div class="col-sm-5 offset-sm-1">
-   <h2>Product Title: {{i.product_name}}</h2>
+   <h2>{{i.product_name}}</h2>
    <hr>
-   <p>Product Description:{{i.desc}}</p> <br>
-   <h4>{{i.price}}<small class="fw-light text-decoration-line-through">15999</small></h4> <br>
+   <div class="mt-1 mb-0 text-muted small">
+    <div>{{i.feature1}}</div>
+    <div>{{i.feature2}}</div>
+    <div>{{i.feature3}}</div>
+    <div>{{i.feature4}}</div>
+  </div>
+   <p>{{i.desc}}</p> <br>
+  
+   <h4>{{i.price}}<small class="fw-light text-decoration-line-through">{{i.acyual_price}}</small></h4> <br>
    <a href="/cart?query_name={{i.id|urlencode}}" class="btn btn-primary shadow px-5 py-2">Add to Cart</a>
-   <a href="{% url 'buy-now' %}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a>
+   <a href="/buy?query_name={{i.id|urlencode}}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a>
    <h5 class="mt-5">Available Offers</h5>
    <ul>
     <li>Bank Offer 5% Unlimited Cashback on Flipkart Axis Bank Credit</li>

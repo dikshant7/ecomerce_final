@@ -4,7 +4,6 @@
 {% block main-content %}
 <div class="container my-5">
  <div class="row">
- <h3>Welcome Sonam</h3>
   <div class="col-sm-2 border-end">
    <ul class="list-unstyled">
     <li class="d-grid"><a href="{% url 'profile' %}" class="btn btn-primary">Profile</a></li>
@@ -17,9 +16,8 @@
      <div class="card">
       <div class="card-body">
        <h3>Address</h3>
-       <p>Name: Rohit Kumar</p>
+       <p>Name: {{j.first_name}} {{j.last_name}}</p>
        <p>Address 1: {{i.user_address1}}</p>
-       <p>Address 2: {{i.user_address2}}</p>
        <p>city: {{i.user_city}}</p>
        <p>State: {{i.user_state}}</p>
        <p>zip: {{i.user_zip}}</p>

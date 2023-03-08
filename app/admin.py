@@ -6,3 +6,6 @@ admin.site.register(product)
 
 from .models import user_detail
 admin.site.register(user_detail)
+
+from .models import order
+admin.site.register(order)

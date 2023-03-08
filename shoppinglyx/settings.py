@@ -79,19 +79,19 @@ WSGI_APPLICATION = 'shoppinglyx.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME':  'ecp',
-#         'USER':'postgres',
-#         'PASSWORD':'admin',
-#         'HOST':'localhost',
-#     }
-# }
-import dj_database_url
-DATABASES={
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':  'ecomerce',
+        'USER':'postgres',
+        'PASSWORD':'admin',
+        'HOST':'localhost',
+    }
 }
+import dj_database_url
+# DATABASES={
+#     "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+# }
 
 
 # Password validation

@@ -1,5 +1,6 @@
+from functools import cache
 from django.shortcuts import render
-from .models import product, user_detail
+from .models import product, user_detail , order
 from django.contrib.auth.models import User,auth
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
@@ -19,10 +20,13 @@ def product_detail(request):
 def add_to_cart(request):
     if not request.user.is_authenticated:
         return redirect('/login')
-    product_id = request.GET.get('query_name')
-    # i = product.objects.get(id=product_id) 
     current_user = request.user
     user_email = current_user.email
+    # if not user_detail.objects.filter(user_email=user_email).exists():
+    #     messages.info(request,'please complete the profile first')
+    #     return redirect('/profile')
+    product_id = request.GET.get('query_name')
+    # i = product.objects.get(id=product_id) 
     i = user_detail.objects.get(user_email=user_email)
     # i.order={'5':'6'}
     temp=False
@@ -49,25 +53,84 @@ def add_to_cart(request):
             products .append(p)
     total=cost+shipping
     ziped=zip(products,quant)
-    return render(request, 'app/addtocart.html',{'products':products,'cost':cost,'shipping':shipping,'total':total,'ziped':ziped})
+    return render(request, 'app/addtocart.html',{'cost':cost,'shipping':shipping,'total':total,'ziped':ziped})
 
 def buy_now(request):
- return render(request, 'app/buynow.html')
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    current_user = request.user
+    user_email = current_user.email
+    product_id = request.GET.get('query_name')
+    i = user_detail.objects.get(user_email=user_email)
+    if product_id:
+        i.order_buynow=product_id
+        i.quant_buynow=1
+        i.save()
+    quant=i.quant_buynow
+    if quant<1:
+        quant=1
+    cost=0
+    shipping=0
+    total=0
+    p=product.objects.get(id=i.order_buynow)
+    cost=p.price*quant
+    shipping=30*quant
+    total=cost+shipping
+    return render(request, 'app/buynow.html',{'cost':cost,'shipping':shipping,'total':total,'i':p,'j':quant})
+   
+def buyadd(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    current_user = request.user
+    user_email = current_user.email
+    i = user_detail.objects.get(user_email=user_email)
+    i.quant_buynow=i.quant_buynow+1
+    i.save()
+    return redirect('/buy')
+
+def buysub(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    current_user = request.user
+    user_email = current_user.email
+    i = user_detail.objects.get(user_email=user_email)
+    product_id=i.order_buynow
+    i.quant_buynow=i.quant_buynow-1
+    i.save()
+    quant=i.quant_buynow
+    p=product.objects.get(id=product_id)
+    cost=p.price*quant
+    shipping=30*quant
+    total=cost+shipping
+    return redirect('/buy')
 
 def profile(request):
     if request.method=="POST":
         address1=request.POST['address1']
-        address2=request.POST['address2']
         city=request.POST['city']
         state=request.POST['state']
         zip=request.POST['zip']
         current_user = request.user
         user_email = current_user.email
-        if user_detail.objects.filter(user_email=user_email).exists():
-             messages.info(request,'email already exists')
-             return render(request, 'app/profile.html')
-        x=user_detail.objects.create(user_email=user_email,user_address1=address1,user_address2=address2,user_city=city,user_state=state,user_zip=zip)
-        x.save()
+        if address1=="":
+            messages.info(request,'please fill the address')
+            return redirect('/profile')
+        if city=="":
+            messages.info(request,'please fill the city')
+            return redirect('/profile')
+        if state=="":
+            messages.info(request,'please fill the state')
+            return redirect('/profile')
+        if zip=="":
+            messages.info(request,'please fill the zip')
+            return redirect('/profile')
+        i = user_detail.objects.get(user_email=user_email)
+        # x=user_detail.objects.create(user_email=user_email,user_address1=address1,user_address2=address2,user_city=city,user_state=state,user_zip=zip)
+        i.user_address1=address1
+        i.user_city=city
+        i.user_state=state
+        i.user_zip=zip
+        i.save()
         messages.info(request,' succesful')
     return render(request, 'app/profile.html')
 
@@ -75,16 +138,54 @@ def address(request):
     current_user = request.user
     user_email = current_user.email
     i = user_detail.objects.get(user_email=user_email)
-    return render(request, 'app/address.html',{'i':i})
+    if i.user_address1=="":
+        messages.info(request,'please fill the address first')
+        return redirect('/profile')
+    return render(request, 'app/address.html',{'i':i,'j':current_user})
 
 def orders(request):
- return render(request, 'app/orders.html')
+    if request.user.is_authenticated:
+        current_user = request.user
+        user_email = current_user.email
+        # if not user_detail.objects.filter(user_email=user_email).exists():
+        #     messages.info(request,'please complete the profile first')
+        #     return redirect('/profile')
+        i = user_detail.objects.get(user_email=user_email)
+        products=[]
+        quant=[]
+        date=[]
+        for j in i.order_history:
+            o=order.objects.get(id=j)
+            p=product.objects.get(id=o.product_id)
+            products.append(p)
+            quant.append(o.quant)
+            date.append(o.created_date)
+        ziped=zip(products,quant,date)
+    else:
+        return render(request,'app/orders.html')
+    return render(request, 'app/orders.html',{'zip':ziped})
 
 def change_password(request):
+ if request.method=="POST":
+            New_Password=request.POST['New Password']
+            Confirm_New_Password=request.POST['Confirm New Password']
+            if New_Password!=Confirm_New_Password:
+                messages.info(request,'password doesnot match')
+            else:
+                current_user = request.user
+                current_user.set_password(New_Password)
+                current_user.save()
+                messages.info(request,'password change sucessfully kindly login again')
+
  return render(request, 'app/changepassword.html')
 
 def mobile(request):
- return render(request, 'app/mobile.html')
+ products=product.objects.all()
+ return render(request, 'app/mobile.html',{'products':products})
+
+def laptop(request):
+ products=product.objects.all()
+ return render(request, 'app/laptop.html',{'products':products})
 
 def login(request):
         if request.method=="POST":
@@ -134,6 +235,8 @@ def customerregistration(request):
                 else:
                     user=User.objects.create_user(username=username,first_name=first_name,last_name=last_name,password=password,email=email)
                     user.save()
+                    x=user_detail.objects.create(user_email=email)
+                    x.save()
                     messages.info(request,'registeration succesful')
             else:
                 messages.info(request,'password doesnot match try again')
@@ -144,8 +247,14 @@ def checkout(request):
     current_user = request.user
     user_email = current_user.email
     i = user_detail.objects.get(user_email=user_email)
+    # j=user.objects
     # i.order={'5':'6'}
+    if i.user_address1=="":
+        messages.info(request,'please fill the address first')
+        return redirect('/profile')
+
     products=[]
+    quant=[]
     cost=0
     shipping=0
     total=0
@@ -155,8 +264,23 @@ def checkout(request):
             cost=cost+p.price*i.order[j]
             shipping=shipping+i.order[j]*30
             products .append(p)
+            quant.append(i.order[j])
     total=cost+shipping
-    return render(request, 'app/checkout.html',{'products':products,'total':total})
+    ziped=zip(products,quant)
+    return render(request, 'app/checkout.html',{'zip':ziped,'total':total,'k':i})
+
+def checkoutbuynow(request):
+    current_user = request.user
+    user_email = current_user.email
+    i = user_detail.objects.get(user_email=user_email)
+    if i.user_address1=="":
+        messages.info(request,'please fill the address first')
+        return redirect('/profile')
+    product_id=i.order_buynow
+    p=product.objects.get(id=product_id)
+    j=i.quant_buynow
+    total=p.price*j+30*j
+    return render(request,'app/checkoutbuynow.html',{'k':i,'i':p,'j':j,'total':total})
 
 def topwear(request):
     products=product.objects.all()
@@ -220,3 +344,29 @@ def add_to_cart3(request):
             products .append(product.objects.get(id=j))
     
     return redirect('/cart')
+
+def order_placed(request):
+    current_user = request.user
+    user_email = current_user.email
+    i = user_detail.objects.get(user_email=user_email)
+    for j in i.order:
+        o=order.objects.create(product_id=j,quant=i.order[j],user_email=user_email)
+        o.save()
+        i.order_history[o.id]=1
+    i.order={}
+    i.save()
+    return redirect('/orders')
+
+def order_placed_buy_now(request):
+    print('yes')
+    current_user = request.user
+    user_email = current_user.email
+    i = user_detail.objects.get(user_email=user_email)
+    j=i.order_buynow
+    quant=i.quant_buynow
+    o=order.objects.create(product_id=j,quant=quant,user_email=user_email)
+    o.save()
+    i.order_history[o.id]=1
+    i.save()
+    return redirect('/orders')
+
