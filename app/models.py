@@ -11,6 +11,7 @@ class product(models.Model):
     desc=models.CharField(max_length=300)
     pub_date=models.DateField()
     image=models.ImageField(upload_to="images/product",default="")
+    smallimage=models.ImageField(upload_to="images/product",default="")
     feature1=models.CharField(max_length=50,default="")
     feature2=models.CharField(max_length=50,default="")
     feature3=models.CharField(max_length=50,default="")
